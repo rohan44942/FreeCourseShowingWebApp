@@ -1,0 +1,69 @@
+<div class="card" style="width: 18rem; margin: auto; margin-top: 3rem">
+  <div class="card-body">
+    <form #courseFrom="ngForm" (ngSubmit)="handleSubmit(courseFrom)">
+      <h5 class="card-title">Add course</h5>
+      <div class="mb-3 card-body">
+        <label for="exampleFormControlInput1" class="form-label">Title</label>
+        <input
+          type="email"
+          id="title"
+          name="title"
+          #title="ngModel"
+          [(ngModel)]="model.title"
+          class="form-control"
+          placeholder="name@example.com"
+          required
+        />
+        <div class="text-danger" *ngIf="title.touched && title.invalid">
+          Title is Required
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label"
+          >Description
+        </label>
+        <textarea
+          class="form-control"
+          rows="3"
+          id="Description"
+          name="Description"
+          #description="ngModel"
+          [(ngModel)]="model.description"
+          required
+        ></textarea>
+        @if(description.invalid && description.touched ){
+        <div class="text-danger">Description is Required</div>
+        }
+      </div>
+      <div class="image">
+        <input
+          type="file"
+          id="image"
+          name="image"
+          accept="image/*"
+          required
+          ngModel
+          [multiple]="false"
+          (change)="onfileSelected($event)"
+        />
+        @if(this.cover_file){
+        <img
+          src="{{ this.cover }}"
+          alt="input image will come here"
+          style="height: 60px; width: 60px"
+        />
+        } @if(this.showError){
+        <div class="text-danger">image is required</div>
+        }
+      </div>
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  </div>
+</div>
+
+<app-courses
+  [courses]="courses"
+  [isAdmin]="true"
+  (del)="deleteCourse($event)"
+></app-courses>
+<button routerLink="/home">go to home</button>
