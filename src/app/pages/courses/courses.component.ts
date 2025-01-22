@@ -9,7 +9,10 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { AdminComponent } from '../admin/admin.component';
+import { Strings } from '../../enum/strings';
+import { Course } from '../../interface/course.interface';
+import { CourseService } from '../../services/course/course.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-courses',
@@ -20,22 +23,35 @@ import { AdminComponent } from '../admin/admin.component';
 })
 export class CoursesComponent {
   // isAdmin = input<boolean>(false);
-  courseService: Array<any> = [];
-  @Input() courses: any;
+  // @Input() courses: any;
+  // @Output() del: EventEmitter<any> = new EventEmitter();
   @Input() isAdmin = false;
-  @Output() del: EventEmitter<any> = new EventEmitter();
+  // courseService: Array<any> = [];
+  private courseService = inject(CourseService);
+  courses: Course[] = [];
+  coursesSub!: Subscription;
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // this.getCourses();
+    this.courses = this.courseService.getCourses();
+    this.coursesSub = this.courseService.courses.subscribe({
+      next: (courses) => {
+        this.courses = courses;
+      },
+    });
+  }
 
   understandSignalUsageWithExample() {
     // without signals
   }
-
-  deleteCourse(course: any) {
-    this.del.emit(course);
-    // this.courseService.deleteCourse(course);
+  deleteCourse(course: Course) {
+    console.log('inside the courses cliked');
+    this.courseService.deleteCourse(course);
   }
-
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    if (this.coursesSub) {
+      this.coursesSub.unsubscribe();
+    }
+  }
 }
