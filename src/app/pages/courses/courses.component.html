@@ -1,8 +1,9 @@
 <div class="row mt-5">
-  @for(course of courses; track $index) {
+  @for(course of courses(); track $index) {
   <div class="col-lg-4 mb-4">
     <div class="box" align="center">
       <div align="center" class="course-image">
+        <!-- @let url = sanitizerURL(course.image); -->
         <img [src]="course.image" />
         @if(isAdmin) {
         <button class="btn btn-danger" (click)="deleteCourse(course)">

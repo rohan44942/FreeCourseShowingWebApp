@@ -1,8 +1,7 @@
 import { NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Strings } from '../../enum/strings';
 import { CoursesComponent } from '../courses/courses.component';
 import { CourseService } from '../../services/course/course.service';
 import { Course } from '../../interface/course.interface';
@@ -15,10 +14,16 @@ import { Course } from '../../interface/course.interface';
   styleUrl: './admin.component.scss',
 })
 export class AdminComponent {
-  model: any = {};
-  cover?: string | any;
-  cover_file: any;
-  showError?: boolean;
+  // model: any = {};
+  // cover?: string | any;
+  // cover_file: any;
+  // showError?: boolean;
+
+  model = signal<any>({});
+  cover = signal<string | any>(null);
+  cover_file = signal<any>(null);
+  showError = signal<any>(false);
+
   private courseService = inject(CourseService);
   constructor() {}
   ngOnInit() {}
@@ -28,12 +33,12 @@ export class AdminComponent {
     if (form.invalid || !this.cover) {
       form.control.markAllAsTouched();
       if (!this.cover) {
-        this.showError = true;
+        // this.showError = true;
+        this.showError.set(true);
       }
       return;
     }
     this.saveCourse(form);
-    // console.log(form.value);
   }
 
   async saveCourse(form: NgForm) {
@@ -41,7 +46,7 @@ export class AdminComponent {
       const formValue = form.value;
       const data: Course = {
         ...formValue,
-        image: this.cover,
+        image: this.cover(),
       };
       await this.courseService.addCourse(data);
       this.clearForm(form);
@@ -51,8 +56,10 @@ export class AdminComponent {
   }
   clearForm(form: NgForm) {
     form.reset();
-    this.cover = null;
-    this.cover_file = null;
+    // this.cover = null;
+    // this.cover_file = null;
+    this.cover.set(null);
+    this.cover_file.set(null);
   }
   onfileSelected(event: any) {
     const file = event.target.files[0];
@@ -62,17 +69,15 @@ export class AdminComponent {
       const reader = new FileReader();
       reader.onload = () => {
         const dataurl = reader.result?.toString();
-        this.cover = dataurl;
+        // this.cover = dataurl;
+        this.cover.set(dataurl);
         console.log('image', this.cover);
       };
       reader.readAsDataURL(file);
-      this.showError = false;
+      // this.showError = false;
+      this.showError.set(false);
     }
   }
 
-  deleteCourse(cousrse: any) {
-    //   // here delte the course
-    //   this.courses = this.courses.filter((val) => val.id != cousrse.id);
-    //   this.setItem(this.courses);
-  }
+  deleteCourse(cousrse: any) {}
 }

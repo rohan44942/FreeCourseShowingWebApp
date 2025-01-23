@@ -80,7 +80,7 @@
           id="title"
           name="title"
           #title="ngModel"
-          [(ngModel)]="model.title"
+          [(ngModel)]="model().title"
           class="form-control"
           placeholder="Enter course title"
           required
@@ -97,7 +97,7 @@
           id="description"
           name="description"
           #description="ngModel"
-          [(ngModel)]="model.description"
+          [(ngModel)]="model().description"
           placeholder="Enter course description"
           rows="4"
           required
@@ -125,7 +125,7 @@
         />
         <div *ngIf="cover_file" class="mt-3">
           <img
-            [src]="cover"
+            [src]="cover()"
             alt="Selected image preview"
             class="img-thumbnail"
             style="height: 80px; width: 80px"
